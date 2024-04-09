@@ -1,45 +1,34 @@
 package Exercise2;
 
-public interface MazeBuilder {
-    MazeBuilder addRoom(int roomNo);
-    MazeBuilder addDoor(int roomFrom, int roomTo);
-    Maze build();
-}
-
-
-
-public class StandardMazeBuilder implements MazeBuilder {
+public class MazeBuilder {
     private Maze maze;
 
-    public StandardMazeBuilder() {
+    public MazeBuilder() {
         this.maze = new Maze();
     }
 
-    @Override
-    public StandardMazeBuilder addRoom(int roomNo) {
-        Room room = new Room(roomNo);
+    public MazeBuilder addRoom(Room room) {
         maze.addRoom(room);
-
-        // Initialize the room with walls
-        for (Direction dir : Direction.values()) {
-            room.setSide(dir, new Wall());
-        }
         return this;
     }
 
-    @Override
-    public StandardMazeBuilder addDoor(int roomFrom, int roomTo) {
-        Room r1 = maze.roomNo(roomFrom);
-        Room r2 = maze.roomNo(roomTo);
-        DoorWall door = new DoorWall(r1, r2);
-
-        r1.setSide(Direction.SOUTH, door); // assuming all doors are to the SOUTH for simplicity
-        r2.setSide(Direction.NORTH, door); // and accordingly to the NORTH on the other side
+    public MazeBuilder addDoor(Room room1, Room room2) {
+        DoorWall door = new DoorWall(room1, room2);
+        room1.setSide(getDirection(room1, room2), door);
+        room2.setSide(getDirection(room2, room1), door);
         return this;
     }
 
-    @Override
     public Maze build() {
         return maze;
     }
+
+    private Direction getDirection(Room from, Room to) {
+        if (from.getRoomNo() < to.getRoomNo()) {
+            return Direction.EAST;
+        } else {
+            return Direction.WEST;
+        }
+    }
+
 }

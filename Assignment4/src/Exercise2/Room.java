@@ -1,17 +1,21 @@
 package Exercise2;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Room {
-    private Map<Direction, Wall> sides = new EnumMap<>(Direction.class);
+    private final Map<Direction, Wall> sides = new HashMap<>();
     private final int roomNo;
 
     public Room(int roomNo) {
         this.roomNo = roomNo;
     }
 
-    public void addSide(Direction direction, Wall wall) {
+    public Wall getSide(Direction direction) {
+        return sides.get(direction);
+    }
+
+    public void setSide(Direction direction, DoorWall wall) {
         sides.put(direction, wall);
     }
 
